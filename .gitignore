@@ -1,0 +1,8 @@
+#Environment files
+.env
+
+#VSCode settings
+.vscode/
+
+#Windows system files
+Thumbs.db
