@@ -22,3 +22,8 @@ class EndpointStatus(Base):
 
     # Possibly response_time, error_message, etc.
 
+
+
+
+
+
