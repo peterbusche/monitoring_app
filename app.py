@@ -1,0 +1,5 @@
+# functionality:
+#   -entrypoint
+#   -/metrics endpoint
+# 
+# 

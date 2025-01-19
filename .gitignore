@@ -6,3 +6,8 @@
 
 #Windows system files
 Thumbs.db
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
