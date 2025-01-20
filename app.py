@@ -4,6 +4,7 @@
 # 
 # USAGE: PS C:\Users\peter\Dropbox\LunaTest> 
 #   python -m monitoring_app.app
+#   python -m monitoring_app.app C:\Users\peter\Dropbox\LunaTest\monitoring_app\config\2.yaml
 
 
 # quick Testing for get_metrics(): 
@@ -18,12 +19,19 @@
 # app.py
 from flask import Flask, request, jsonify
 from monitoring_app.db import SessionLocal                     #database session factory
+from monitoring_app.db import engine, Base
 from monitoring_app.models import EndpointStatus, Endpoint
 from datetime import datetime, timezone, timedelta
+from monitoring_app.scheduler import start_scheduler
+from monitoring_app.config import load_config, print_yaml
+import sys
+
+# initialize tables if they dont already exist (DO THIS IF WE DONT PLAN ON USING MIGRATIONS)
+# Base.metadata.create_all(bind=engine)
 
 app = Flask(__name__)
 
-#implement /get endpoint for app
+# implement /get endpoint for app
 @app.route("/metrics")
 def get_metrics():
     """
@@ -113,7 +121,24 @@ def get_metrics():
 
     return jsonify(response_data)
 
-if __name__ == "__main__":
-    from monitoring_app.scheduler import start_scheduler
-    start_scheduler()
+def add_endpoints():
+    return
+
+
+def main():
+    config_path = r"C:\Users\peter\Dropbox\LunaTest\monitoring_app\config\1.yaml"
+    if len(sys.argv) > 1:
+        config_path = sys.argv[1]
+        print(f"Using config file: {config_path}")
+    else:
+        print(f"No config path provided, using default: {config_path}")
+
+    app_config = load_config(config_path)
+    print("Loaded config:", app_config)
+
+    # start_scheduler()
+    start_scheduler(app_config)
     app.run(port=5000)
+
+if __name__ == "__main__":
+    main()

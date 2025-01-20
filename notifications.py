@@ -1,4 +1,4 @@
-#notifications.py
+# notifications.py
 import requests
 from monitoring_app.db import DISCORD_WEBHOOK_URL
 

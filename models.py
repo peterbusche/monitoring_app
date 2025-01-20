@@ -17,13 +17,6 @@ class EndpointStatus(Base):
     id = Column(Integer, primary_key=True, index=True)
     endpoint_id = Column(Integer, ForeignKey("endpoints.id"))
     status_code = Column(Integer, nullable=False)
-    checked_at = Column(DateTime(timezone=True), server_default=func.now())
-
+    checked_at = Column(DateTime(timezone=True), server_default=func.now()) #uses database server timestamp to ensure consistency
 
     # possibly response_time, error_message, etc
-
-
-
-
-
-

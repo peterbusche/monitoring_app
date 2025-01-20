@@ -1,0 +1,13 @@
+# Python installer for windows:
+https://www.python.org/downloads/
+
+# PostgreSQL installer for windows:
+https://www.postgresql.org/download/windows/
+
+# Python library installers
+pip install APScheduler
+pip install requests
+pip install SQLAlchemy
+pip install psycopg2-binary
+pip install pyyaml
+
