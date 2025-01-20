@@ -18,8 +18,14 @@ def check_endpoints():
     for e in endpoints:
         try:
             response = requests.get(e.url, timeout=5)
+            #getOrInsertEndpointID() {
+                #either
+                    #return endpoint id from database based on URL if exists
+                #or
+                    #insert endpoint ID into table
+            #}
             record = EndpointStatus(endpoint_id=e.id, status_code=response.status_code)
-            db.add(record)
+            db.add(record) #does this use a transaction?
             db.commit()
 
             if response.status_code >= 500:
@@ -27,8 +33,9 @@ def check_endpoints():
                 print("Status Code 500 found")
                 send_discord_alert(e.url, response.status_code)
                 pass
+            
         except Exception as ex:
-            # store or log the error (e.g. status_code=0)
+            # store or log the error ( status_code=0)
             print("Exception in endpoint found")
             pass
 
@@ -36,7 +43,7 @@ def check_endpoints():
 
 def start_scheduler():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(check_endpoints, 'interval', seconds=10)
+    scheduler.add_job(check_endpoints, 'interval', seconds=10) #be able to adjust this
     scheduler.start()
 
 

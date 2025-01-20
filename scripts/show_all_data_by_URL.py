@@ -1,8 +1,4 @@
 # show_all_data_byURL.py
-"""
-Displays all data from the 'endpoints' and 'endpoint_status' tables,
-grouping endpoint_status rows by endpoint_id.
-"""
 
 from collections import defaultdict
 
@@ -12,7 +8,7 @@ from monitoring_app.models import Endpoint, EndpointStatus
 def show_all_data_byURL():
     db = SessionLocal()
 
-    # 1) Show all endpoints
+    # 1) show all endpoints
     endpoints = db.query(Endpoint).all()
     if not endpoints:
         print("No endpoints found.")
@@ -21,7 +17,7 @@ def show_all_data_byURL():
         for e in endpoints:
             print(f"  [ID={e.id}] URL={e.url}")
 
-    # 2) Query EndpointStatus, sorting by endpoint_id 
+    # 2) query EndpointStatus, sorting by endpoint_id 
     statuses = db.query(EndpointStatus).order_by(EndpointStatus.endpoint_id, EndpointStatus.id).all()
 
     if not statuses:

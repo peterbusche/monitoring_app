@@ -1,9 +1,5 @@
 # view_endpoints.py
 #USAGE: python -m monitoring_app.scripts.view_endpoints
-"""
-A script to SELECT all rows from the "endpoints" table
-and display them. Just for checking what's in the DB.
-"""
 
 from monitoring_app.db import SessionLocal
 from monitoring_app.models import Endpoint

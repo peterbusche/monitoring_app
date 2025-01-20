@@ -7,9 +7,9 @@ class Endpoint(Base):
     __tablename__ = "endpoints"
     id = Column(Integer, primary_key=True)
     url = Column(String, unique=True, nullable=False)
-    # Optional fields:
+    # potential fields:
     # friendly_name = Column(String)
-    # is_active = Column(Boolean, default=True)
+    
 
 class EndpointStatus(Base):
     __tablename__ = "endpoint_status"
@@ -20,7 +20,7 @@ class EndpointStatus(Base):
     checked_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
-    # Possibly response_time, error_message, etc.
+    # possibly response_time, error_message, etc
 
 
 

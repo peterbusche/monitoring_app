@@ -1,4 +1,4 @@
-# show_all_data_byTimestamp.py
+# show_all_data_by_timestamp.py
 #USAGE: python -m monitoring_app.scripts.show_all_data_byTimestamp
 
 

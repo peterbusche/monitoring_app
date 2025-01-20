@@ -63,3 +63,7 @@ Potential project Structure:
 
 
 
+THINGS TO INCLUDE
+    What this does
+    how to configure it
+    how to test it
