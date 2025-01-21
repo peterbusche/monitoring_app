@@ -15,6 +15,10 @@ database = os.getenv("DB_NAME", "monitoring_app_db")
 DB_URL = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
-engine = create_engine(DB_URL, echo=True) # SQLalchemy to create a database engine with logging=true
-SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False) #create a seesion object and bind our engine to a session
-Base = declarative_base() #base class for declarative models
+engine = create_engine(
+    DB_URL, echo=True
+)  # SQLalchemy to create a database engine with logging=true
+SessionLocal = sessionmaker(
+    bind=engine, autocommit=False, autoflush=False
+)  # create a seesion object and bind our engine to a session
+Base = declarative_base()  # base class for declarative models

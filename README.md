@@ -23,7 +23,7 @@
     Clone the Repository:
         git clone https://github.com/peterbusche/monitoring_app
 
-    Set up VM and login:
+    Set up VM and login (optional):
         python -m venv venv
 
     Install Dependencies:
@@ -75,3 +75,4 @@
             http://localhost:5000/metrics?host=httpbin&since=1200
 
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

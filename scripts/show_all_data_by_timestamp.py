@@ -1,5 +1,5 @@
 # show_all_data_by_timestamp.py
-#USAGE: python -m monitoring_app.scripts.show_all_data_byTimestamp
+# USAGE: python -m monitoring_app.scripts.show_all_data_byTimestamp
 
 
 """
@@ -9,6 +9,7 @@ Useful for quickly checking the contents of your monitoring DB.
 
 from monitoring_app.db import SessionLocal
 from monitoring_app.models import Endpoint, EndpointStatus
+
 
 def show_all_data_byTimestamp():
     db = SessionLocal()
@@ -29,9 +30,12 @@ def show_all_data_byTimestamp():
     else:
         print("\nEndpointStatus rows:")
         for s in statuses:
-            print(f"  [ID={s.id}] endpoint_id={s.endpoint_id}, status_code={s.status_code}, checked_at={s.checked_at}")
+            print(
+                f"  [ID={s.id}] endpoint_id={s.endpoint_id}, status_code={s.status_code}, checked_at={s.checked_at}"
+            )
 
     db.close()
+
 
 if __name__ == "__main__":
     show_all_data_byTimestamp()
