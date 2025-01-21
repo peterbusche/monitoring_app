@@ -23,7 +23,7 @@ from monitoring_app.db import engine, Base
 from monitoring_app.models import EndpointStatus, Endpoint
 from datetime import datetime, timezone, timedelta
 from monitoring_app.scheduler import start_scheduler
-from monitoring_app.config import load_config, print_yaml
+from monitoring_app.config import load_config
 import sys
 
 # initialize tables if they dont already exist (DO THIS IF WE DONT PLAN ON USING MIGRATIONS)
@@ -39,11 +39,11 @@ def get_metrics():
         ->returns aggregated stats for the specified time window (default 600s = 10min)
         ->filter by host if 'host' query param is provided
     """
-    db = SessionLocal()
+    db = SessionLocal() #gets new Session instance from session factory in db.py
 
-    # 1) parse query params
+    # parse query params
     host_filter = request.args.get("host", "")       # substring to match in endpoint.url
-    since_seconds = int(request.args.get("since", 600))
+    since_seconds = int(request.args.get("since", 600))  
 
     # compute start_time for filtering
     now_utc = datetime.now(timezone.utc)
@@ -60,8 +60,9 @@ def get_metrics():
     if host_filter:
         query = query.filter(Endpoint.url.contains(host_filter))
 
+    # records is a list of (Endpoint, EndpointStatus) tuples -> records = {()}
     records = query.all()
-    # records is a list of (Endpoint, EndpointStatus) tuples
+    
 
     # builds a dict keyed by endpoint.url, storing stats like total_requests, status_counts, etc
     stats_by_url = {}

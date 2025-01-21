@@ -29,7 +29,19 @@
     Install Dependencies:
         pip install -r requirements.txt
 
-    
+    Install PostgreSQL 17.2 and Login:
+        https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+        psql -h localhost -U postgres -p 5432
+
+    Create the database in psql terminal and connect to it:
+        CREATE database monitoring_app_db;
+
+        psql -h localhost -U postgres -p 5432 -d monitoring_app_db
+
+    Initialize Database Tables:
+        python -m monitoring_app.scripts.init_db   
+
     Create .env file in /monitoring_app package and fill out these variables:
         DB_USER=<username>
         DB_PASSWORD=<password>
@@ -38,9 +50,6 @@
         DB_NAME=monitoring_app_db
         DISCORD_WEBHOOK_URL=<personal_discord_webhook>    
             
-    Initialize Database Tables:
-        python -m monitoring_app.scripts.init_db
-
     Insert Initial Endpoints:
         python -m monitoring_app.scripts.insert_endpoints
 
@@ -60,8 +69,6 @@
     Filter endpoint with query parameters (host, since):
         Query by URL httpbin:
             http://localhost:5000/metrics?host=httpbin
-        Query by status code 503:
-            http://localhost:5000/metrics?host=503
         Query by since_seconds=300:
             http://localhost:5000/metrics?since=300
         Query by combined:
