@@ -45,6 +45,10 @@ def check_endpoints(app_config):
                 # logic if we want to reset counters for specific URLS when they no longer send 500+ counters                
                 # else:
                 #     status_counter[e.id]=0
+
+                #potentially:
+                    #make disc: (key[url]: value[arr[timestamps]])
+                    #where each early index of arr is oldest timestamp and length of array is count of 500+ codes
             
         except Exception as ex:
             # store or log the error ( status_code=0)

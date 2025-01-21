@@ -19,4 +19,3 @@ class EndpointStatus(Base):
     status_code = Column(Integer, nullable=False)
     checked_at = Column(DateTime(timezone=True), server_default=func.now()) #uses database server timestamp to ensure consistency
 
-    # possibly response_time, error_message, etc

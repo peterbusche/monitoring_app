@@ -1,4 +1,4 @@
-# 2.yaml
+# default.yaml
 
 scheduler:
   interval_seconds: 10       # how often to run check_endpoints
@@ -10,8 +10,6 @@ endpoints:
     - url: "https://example.com"
     - url: "https://httpbin.org/status/200"
     - url: "https://httpbin.org/status/503"
-    - url: "https://httpbin.org/status/418"
-
+  
   delete:
     - url: "https://httpbin.org/status/300"
-    - url: "https://httpbin.org/status/200"
