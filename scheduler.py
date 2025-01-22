@@ -28,6 +28,7 @@ def check_endpoints(app_config):
     for e in endpoints:
         try:
             response = requests.get(e.url, timeout=5)
+            print(f"URL: {e.url}     Request Response: {response}")
             record = EndpointStatus(endpoint_id=e.id, status_code=response.status_code)
 
             db.add(
@@ -42,7 +43,7 @@ def check_endpoints(app_config):
 
                 if status_counter[e.id] >= max_500_response_threshold:
                     # send discord alert
-                    print("Status Code 500 found")
+                    print(f"Status Code 500 found")
                     send_discord_alert(e.url, response.status_code)
                     status_counter[e.id] = 0
 
@@ -61,7 +62,7 @@ def check_endpoints(app_config):
 
     db.close()
 
-
+# runs once scheduler has been run for "cleanup_interval" days
 def cleanup_old_data(app_config):
     cleanup_days = app_config["scheduler"]["cleanup_after_days"]
     db = SessionLocal()
@@ -90,11 +91,12 @@ def start_scheduler(app_config):
         replace_existing=True,
     )  # if another job with this id runs over, replace it with this job
 
+    cleanup_interval = app_config["scheduler"]["cleanup_after_days"]
     # clean_up data over past X days
     scheduler.add_job(  # same info as above
         cleanup_old_data,
         "interval",
-        days=1,
+        days=cleanup_interval,
         args=[app_config],
         id="cleanup_job",
         replace_existing=True,

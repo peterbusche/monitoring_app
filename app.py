@@ -9,9 +9,12 @@
 
 # quick Testing for get_metrics():
 #   http://localhost:5000/metrics
-#   http://localhost:5000/metrics?host=503
+#   http://localhost:5000/metrics?host=httpbin
 #   http://localhost:5000/metrics?since=300
 #   http://localhost:5000/metrics?host=httpbin&since=1200
+#   http://localhost:5000/metrics?status_code=503
+#   http://localhost:5000/metrics?status_code=200&host=example
+
 
 
 # app.py
@@ -39,15 +42,12 @@ def get_metrics():
     """
     db = SessionLocal()  # gets new Session instance from session factory in db.py
 
-    # parse query params
-    host_filter = request.args.get("host", "")  # substring to match in endpoint.url
-    since_seconds = int(request.args.get("since", 600))
+    # parse query params from URL arguments
+    host_filter = request.args.get("host", "")  # 'host' argument default = ""
+    since_seconds = int(request.args.get("since", 600)) # 'since' argument default = 600sec
+    status_code_filter = request.args.get("status_code", "")
 
-    # start_time for filtering
-    now_utc = datetime.now(timezone.utc)
-    start_time = now_utc - timedelta(
-        seconds=since_seconds
-    )  # get timestamp from (x=10) minutes ago
+
 
     # build a query to join Endpoint <-> EndpointStatus
     # default inner join -> only returns rows where it has matching value in both tables
@@ -56,16 +56,34 @@ def get_metrics():
         EndpointStatus, Endpoint.id == EndpointStatus.endpoint_id
     )
 
-    # filter by time range
+
+    # set up for 'since' filter
+    now_utc = datetime.now(timezone.utc)
+    start_time = now_utc - timedelta(seconds=since_seconds)  # get timestamp from defulat x=600sec (10 minutes ago)
+
+
+    # Apply Filters
+    # 'since' filter ->always applies default 600sec for query organization
     query = query.filter(EndpointStatus.checked_at >= start_time)
 
-    # IF Filter by host substring is present
+    # 'host' filter
     if host_filter:
         query = query.filter(Endpoint.url.contains(host_filter))
 
+    # 'status_code' filter
+    if status_code_filter:
+        try:
+            status_code_filter = int(status_code_filter) # check if can be converted
+        except ValueError:
+            return jsonify({"error": "Invalid status_code parameter"}), 400
+        
+        query = query.filter(EndpointStatus.status_code == status_code_filter)
+
+
+
+
     # records is a list of (Endpoint, EndpointStatus) tuples
     records = query.all()
-
     stats_by_url = {}
 
     for endpoint, status in records:
@@ -119,6 +137,7 @@ def get_metrics():
     response_data = {
         "time_window_seconds": since_seconds,
         "host_filter": host_filter if host_filter else None,
+        "status_code_filter": status_code_filter if status_code_filter else None,
         "endpoints": endpoint_list,
     }
 

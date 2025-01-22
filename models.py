@@ -14,13 +14,9 @@ class EndpointStatus(Base):
     __tablename__ = "endpoint_status"
 
     id = Column(Integer, primary_key=True, index=True)
-    endpoint_id = Column(
-        Integer, ForeignKey("endpoints.id")
-    )  # use string reference to __tablename__&column to decouple ORM from direct class references -> avoids circular import
+    endpoint_id = Column(Integer, ForeignKey("endpoints.id"))  # use string reference to __tablename__&column to decouple ORM from direct class references -> avoids circular import
     status_code = Column(Integer, nullable=False)
-    checked_at = Column(
-        DateTime(timezone=True), server_default=func.now()
-    )  # uses database server timestamp to ensure consistency
+    checked_at = Column(DateTime(timezone=True), server_default=func.now())  # uses database server timestamp to ensure consistency
 
 
 # use class names in app.py for ORM abstraction from __tablename__

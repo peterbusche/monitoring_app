@@ -16,7 +16,7 @@ DB_URL = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 engine = create_engine(
-    DB_URL, echo=True
+    DB_URL, echo=False
 )  # SQLalchemy to create a database engine with logging=true
 SessionLocal = sessionmaker(
     bind=engine, autocommit=False, autoflush=False

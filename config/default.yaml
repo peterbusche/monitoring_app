@@ -3,7 +3,7 @@
 scheduler:
   interval_seconds: 10       # how often to run check_endpoints
   max_500_response_threshold: 3       # number of 500+ responses before sending Discord alert
-  cleanup_after_days: 30     # days after which to delete old EndpointStatus rows
+  cleanup_after_days: 0.001     # days after which to delete old EndpointStatus rows
 
 endpoints:
   add:
