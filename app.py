@@ -14,7 +14,11 @@
 #   http://localhost:5000/metrics?host=httpbin&since=1200
 #   http://localhost:5000/metrics?status_code=503
 #   http://localhost:5000/metrics?status_code=200&host=example
+#   http://localhost:5000/metrics?host=mocky
 
+# Potential Implementations:
+#   filter by mutliple status codes: status_code=200,300,400,500
+#   filter by multiple URLs: host=httpbin,example
 
 
 # app.py
@@ -39,6 +43,7 @@ def get_metrics():
     GET /metrics?host=<url_substring>&since=<seconds>
         ->returns aggregated stats for the specified time window (default 600s = 10min)
         ->filter by host if 'host' query param is provided
+        ->filter by status_code if param is provided
     """
     db = SessionLocal()  # gets new Session instance from session factory in db.py
 

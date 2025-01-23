@@ -11,7 +11,14 @@ endpoints:
     - url: "https://httpbin.org/status/200"
     - url: "https://httpbin.org/status/503"
     - url: "https://httpbin.org/status/418"
+    - url: "https://mocky.io"
 
   delete:
     - url: "https://httpbin.org/status/300"
     - url: "https://httpbin.org/status/200"
+
+mocky_urls:
+  - "https://run.mocky.io/v3/1f9e0704-fd33-4ed7-9ba0-57ce4264c522"
+  - "https://run.mocky.io/v3/8f3b4d73-4b33-4e5f-99ab-6e83e589920d"
+  - "https://run.mocky.io/v3/45e56050-09fa-4481-b45c-ae9b11b21cbe"
+  - "https://run.mocky.io/v3/5f9a345d-d1c3-40d7-82c4-11e23ce47a35"

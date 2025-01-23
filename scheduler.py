@@ -13,6 +13,8 @@ from monitoring_app.notifications import send_discord_alert
 import requests
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
+from monitoring_app.mocky_test import MockSelector
+# import mocky_test
 
 # at risk of race conditions since this is mem shared across threads
 status_counter = defaultdict(
@@ -20,14 +22,24 @@ status_counter = defaultdict(
 )  # use this for clarity, so we can track which endpoint sent the 500+ error
 
 
-def check_endpoints(app_config):
+def check_endpoints(app_config, mock_selector):
     max_500_response_threshold = app_config["scheduler"]["max_500_response_threshold"]
     db = SessionLocal()
     endpoints = db.query(Endpoint).all()  # get all rows from Endpoint table
 
     for e in endpoints:
         try:
-            response = requests.get(e.url, timeout=5)
+
+            # Check if the endpoint URL is the generic Mocky URL
+            if e.url == "https://mocky.io":
+                # Get a random real Mocky URL
+                real_mocky_url = mock_selector.get_mocky_url()
+                print(f"Replacing generic Mocky URL with real Mocky URL: {real_mocky_url}")
+                response = requests.get(real_mocky_url, timeout=5)
+            else:
+                response = requests.get(e.url, timeout=5)
+            
+
             print(f"URL: {e.url}     Request Response: {response}")
             record = EndpointStatus(endpoint_id=e.id, status_code=response.status_code)
 
@@ -68,6 +80,7 @@ def cleanup_old_data(app_config):
     db = SessionLocal()
     cutoff_time = datetime.now(timezone.utc) - timedelta(days=cleanup_days)
     # delete every row by timestamp, not by endpoint id
+    # will never delete entries in Endpoint table
     deleted = (
         db.query(EndpointStatus)
         .filter(EndpointStatus.checked_at < cutoff_time)
@@ -78,15 +91,20 @@ def cleanup_old_data(app_config):
     db.close()
 
 
+
 def start_scheduler(app_config):
     interval = app_config["scheduler"]["interval_seconds"]
     scheduler = BackgroundScheduler()
+
+    mocky_urls = app_config.get("mocky_urls", [])
+    mock_selector = MockSelector(mocky_urls)
+
     # check endpoints
     scheduler.add_job(
         check_endpoints,  # function to execute
         "interval",  # interval trigger for function execution
         seconds=interval,  # interval time type
-        args=[app_config],  # give it yaml file as an argument
+        args=[app_config, mock_selector],  # give it yaml file as an argument
         id="check_endpoints_job",  # unique id for this job
         replace_existing=True,
     )  # if another job with this id runs over, replace it with this job
@@ -103,3 +121,7 @@ def start_scheduler(app_config):
     )
 
     scheduler.start()
+
+
+
+
